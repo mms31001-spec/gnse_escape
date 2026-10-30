@@ -118,8 +118,8 @@ footer{margin-top:24px;font-size:12px;opacity:.8}
       <label for="nm">이름을 쓰면 탐정 수료증을 만들어 줘요</label>
       <input id="nm" maxlength="8" placeholder="이름" autocomplete="off">
       <button id="mk">수료증 만들기</button>
-      <canvas id="cv" width="900" height="640"></canvas>
-      <button id="dl" style="display:none">그림으로 저장하기</button>
+      <canvas id="cv" width="900" height="640" style="display:none!important"></canvas><img id="cimg" alt="탐정 수료증" style="display:none;width:100%;margin-top:12px;border-radius:12px"><p id="savetip" style="display:none;font-size:13px;margin-top:8px;line-height:1.5;color:#35505f">저장이 안 되면 <b>위 그림을 길게 눌러</b> '이미지 저장'을 선택하세요.</p>
+      <button id="dl" style="display:none">사진첩에 저장하기</button>
     </div>
   </section>
 
@@ -200,9 +200,28 @@ $('mk').onclick=function(){
   x.fillStyle='#0d3b57';x.font='500 34px "Noto Sans KR","Malgun Gothic",sans-serif';
   x.fillText('과학체험관 탈출 대작전을',W/2,380);x.fillText('멋지게 해결했음을 증명합니다.',W/2,428);
   x.font='700 30px "Noto Sans KR","Malgun Gothic",sans-serif';x.fillStyle='#1593ad';x.fillText('경상남도교육청 과학교육원',W/2,540);
-  c.classList.add('show');$('dl').style.display='inline-block';
+  finishCert(c);
 };
-$('dl').onclick=function(){var a=document.createElement('a');a.download='탐정수료증.png';a.href=$('cv').toDataURL('image/png');a.click()};
+
+var certFile=null,certUrl=null;
+function finishCert(c){
+  c.toBlob(function(b){
+    certFile=new File([b],'탐정수료증.png',{type:'image/png'});
+    if(certUrl)URL.revokeObjectURL(certUrl);certUrl=URL.createObjectURL(b);
+    var im=document.getElementById('cimg');im.src=certUrl;im.style.display='block';
+    document.getElementById('savetip').style.display='block';
+    var d=document.getElementById('dl');d.style.display='inline-block';
+  },'image/png');
+}
+function saveCert(){
+  if(!certFile)return;
+  if(navigator.canShare&&navigator.canShare({files:[certFile]})){
+    navigator.share({files:[certFile],title:'탐정 수료증'}).catch(function(){});
+  }else{
+    var a=document.createElement('a');a.download='탐정수료증.png';a.href=certUrl;document.body.appendChild(a);a.click();a.remove();
+  }
+}
+$('dl').onclick=saveCert;
 </script>
 </body>
 </html>
