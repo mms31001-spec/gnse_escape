@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>과학체험관 탈출 대작전 (디지털판)</title>
+<title>과학체험관 탈출 대작전 (모바일 버전)</title>
 <style>
 :root{--navy:#0d3b57;--teal:#1593ad;--yellow:#ffc928;--orange:#ff7a2f;--cream:#fff7e3;--green:#2fb36b}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -96,6 +96,33 @@ footer{margin-top:24px;font-size:12px;opacity:.8}
 .top .where{font-size:11.5px;line-height:1.25;margin-top:5px}
 .top h2{font-size:19px}.top .do{font-size:13.5px}
 .board{margin-top:8px}
+body.playing main>.org,body.playing main>h1,body.playing main>.badge{display:none}
+#play .slots{margin:0 0 8px;gap:6px;align-items:center}
+#play .slot{width:38px;height:42px;font-size:22px;border-width:3px;border-radius:9px}
+#play .slot.on{transform:none}
+#play .slots::before{content:'🔒 탈출 암호';color:#fff;font-weight:900;font-size:14px;margin-right:4px}
+#cap{display:none}
+.card{padding:12px 14px}
+.tag{margin-bottom:4px}
+.top{margin-top:2px}
+.top .tr{flex:0 0 84px}
+.top .lens{width:80px;height:80px;border-width:4px}
+.top .where{font-size:10.5px;margin-top:3px}
+.top h2{font-size:18px}
+.top .do{font-size:13px;line-height:1.35;margin-top:2px}
+.board{margin:6px -22px 6px;background:transparent}
+.ctl{display:none}
+.rwrap{display:flex;gap:8px;align-items:center;margin:0 0 8px}
+.rwrap .rule{flex:1;margin:0;padding:6px 9px;font-size:13px;line-height:1.35;letter-spacing:-0.6px}
+.rwrap .rule .n{flex:0 0 18px;height:18px;line-height:18px;font-size:11px}
+#undo{flex:0 0 auto;background:#e8f1f5;color:var(--navy);font-weight:900;font-size:12.5px;padding:9px 10px;border-radius:14px}
+.q{display:none}
+.num{height:48px}
+.fb{display:none}
+.hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(320px,86vw);z-index:60;box-shadow:0 0 0 100vmax rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.35);border:4px solid var(--yellow);border-left-width:4px;border-radius:16px;padding:16px 16px 12px;font-size:15px;text-align:left}
+.hint b{display:block;font-size:18px;color:#d94b4b;margin-bottom:6px}
+.hint i{display:block;text-align:center;font-style:normal;font-size:12px;color:#8a7a3a;margin-top:8px}
+.next{margin-top:0;font-size:17px;padding:12px 10px}
 </style>
 </head>
 <body>
@@ -103,7 +130,7 @@ footer{margin-top:24px;font-size:12px;opacity:.8}
 <main>
   <div class="org">경상남도교육청 과학교육원</div>
   <h1><small>과학체험관</small>탈출 대작전!</h1>
-  <span class="badge">휴대폰 디지털판</span>
+  <span class="badge">모바일 버전</span>
 
   <!-- 시작 -->
   <section id="intro">
@@ -122,8 +149,8 @@ footer{margin-top:24px;font-size:12px;opacity:.8}
       <div class="tag"><span id="mtag"></span><span id="mexh"></span></div>
       <div class="top"><div class="tl"><h2 id="mtitle"></h2><div class="do" id="mdo"></div></div><div class="tr"><div class="lens"><img id="mimg" alt=""></div><div class="where">이 사진은<br>어디서 찍었을까?</div></div></div>
       <div class="board" id="board"></div>
-      <div class="ctl"><span id="lc">✏️ 손가락으로 그림 위에 줄을 그어요</span><button id="undo">모두 지우기</button></div>
-      <div class="rule" id="rule"></div>
+      <div class="ctl"><span id="lc"></span></div>
+      <div class="rwrap"><div class="rule" id="rule"></div><button id="undo">✏️ 지우기</button></div>
       <div class="q" id="mq"></div>
       <div class="nums" id="opts"></div>
       <div class="fb" id="fb"></div>
@@ -163,7 +190,7 @@ var M=[{"tag": "MISSION 1", "exh": "빛과 렌즈", "title": "레이저 줄기�
 var cur=0,found=[],locked=false,sel=null,lines=[];
 function $(i){return document.getElementById(i)}
 function drawSlots(el){el.innerHTML='';for(var i=0;i<4;i++){var d=document.createElement('div');d.className='slot'+(found[i]?' on':'');d.textContent=found[i]||'?';el.appendChild(d)}}
-$('start').onclick=function(){$('intro').classList.add('hide');$('play').classList.remove('hide');drawSlots($('slots'));show()};
+$('start').onclick=function(){document.body.classList.add('playing');$('intro').classList.add('hide');$('play').classList.remove('hide');drawSlots($('slots'));show()};
 var NS='http://www.w3.org/2000/svg';
 function dotOf(id){var m=M[cur];for(var i=0;i<m.dots.length;i++)if(m.dots[i].id===id)return m.dots[i]}
 function show(){
@@ -174,9 +201,9 @@ function show(){
   $('next').textContent=cur===3?'자물쇠 열기 ▶':'다음 미션 ▶';
   var bd=$('board');bd.innerHTML='<svg viewBox="'+m.vb+'">'+m.board+'<g id="lg"></g></svg>';setupPen(bd.querySelector('svg'));
   
-  var o=$('opts');o.innerHTML='';
+  var o=$('opts');o.innerHTML='';o.style.display='';
   for(var i=1;i<=m.n;i++){(function(k){var b=document.createElement('button');b.className='num';b.textContent=k;b.disabled=false;b.onclick=function(){pick(k,b)};o.appendChild(b)})(i)}
-  upd();window.scrollTo({top:0,behavior:'smooth'});
+  upd();window.scrollTo(0,0);requestAnimationFrame(fit);
 }
 function hl(){[].forEach.call(document.querySelectorAll('.hit'),function(c){c.classList.toggle('sel',c.getAttribute('data-id')===sel)})}
 function tap(id){
@@ -204,6 +231,11 @@ function upd(){return;
   $('lc').textContent='이은 줄 '+lines.length+' / '+m.need;
   
 }
+function fit(){var sv=$('board').querySelector('svg');if(!sv)return;sv.style.width='';sv.style.margin='';
+  var card=document.querySelector('#play .card');if(!card||$('play').classList.contains('hide'))return;
+  var over=card.getBoundingClientRect().bottom+window.scrollY-window.innerHeight+6;if(over<=0)return;
+  var r=sv.getBoundingClientRect(),h=Math.max(r.height-over,r.height*0.7);sv.style.width=(r.width*h/r.height)+'px';sv.style.margin='0 auto'}
+window.addEventListener('resize',function(){fit()});
 function setupPen(svg){
   var g=svg.querySelector('#lg'),path=null,pts='';
   function pt(e){var p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;var q=p.matrixTransform(svg.getScreenCTM().inverse());return q.x.toFixed(1)+' '+q.y.toFixed(1)}
@@ -222,16 +254,17 @@ function pick(n,b){
     found[cur]=String(n);drawSlots($('slots'));
     $('fb').textContent='정답! 암호 숫자 '+n+' 을(를) 찾았어요!';$('fb').className='fb ok';
     $('cap').textContent='찾은 암호: '+found.filter(Boolean).length+' / 4';
-    $('next').classList.add('show');
+    $('opts').style.display='none';$('next').textContent='정답! 암호 '+n+' ▶ '+(cur===3?'자물쇠 열기':'다음 미션');$('next').classList.add('show');
   }else{
     b.classList.remove('no');void b.offsetWidth;b.classList.add('no');
     $('fb').textContent='앗, 아니에요! 다시 골라 봐요.';$('fb').className='fb bad';
-    $('hint').textContent='힌트: '+m.hint;$('hint').classList.add('show');
+    $('hint').innerHTML='<b>앗, 아니에요!</b>힌트: '+m.hint+'<i>화면을 누르면 닫혀요</i>';$('hint').classList.add('show');clearTimeout(window._ht);window._ht=setTimeout(function(){$('hint').classList.remove('show')},6000);
   }
 }
+$('hint').onclick=function(){$('hint').classList.remove('show')};document.addEventListener('pointerdown',function(e){var h=$('hint');if(h.classList.contains('show')&&!h.contains(e.target)){h.classList.remove('show');e.preventDefault();e.stopPropagation()}},true);
 $('next').onclick=function(){
   if(cur<3){cur++;show()}else{
-    $('play').classList.add('hide');$('win').classList.remove('hide');drawSlots($('slots2'));window.scrollTo(0,0);
+    document.body.classList.remove('playing');$('play').classList.add('hide');$('win').classList.remove('hide');drawSlots($('slots2'));window.scrollTo(0,0);
     setTimeout(function(){$('lockw').classList.add('open');boom()},400);
   }
 };
