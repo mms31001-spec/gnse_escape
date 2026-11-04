@@ -102,16 +102,16 @@ footer{margin-top:26px;font-size:12px;opacity:.8}
 
 <script>
 /* 정답은 간단한 해시로만 보관합니다 (화면에서 바로 읽히지 않게) */
-var ANSWER_HASH="1pt2b4fizlj", ANSWER_LEN=4;
+var ANSWER_HASH="omo660d6r7", ANSWER_LEN=4;
 function h(s){var a=0xdeadbeef^7,b=0x41c6ce57^7;for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}
   a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);
   return (4294967296*(2097151&b)+(a>>>0)).toString(36)}
 /* 자리별 확인용: 자리마다 해시 */
-var POS_HASH=["207fpwxcspq","n4ozzwd70j","6sot7i0xs9","vreucl36vc"];
+var POS_HASH=["1d77dxpp4q5","6nci13rkbu","1ditbs575zs","vreucl36vc"];
 var HINTS=[
  "빛을 한 점으로 모으려면 가운데가 불룩한 렌즈가 필요해요. 돋보기를 떠올려 봐요!",
  "움직도르래는 추와 함께 움직여요. 줄 두 가닥이 무게를 나눠 들어요. 그럼 내가 당기는 힘은 어떻게 될까요?",
- "문손잡이를 돌릴 때 손잡이가 길수록 어떤지 떠올려 봐요. 두 핸들을 직접 번갈아 돌려 비교해 보세요.",
+ "문손잡이를 돌릴 때 손잡이가 길수록 어떤지 떠올려 봐요. 크기가 다른 핸들을 직접 번갈아 돌려 비교해 보세요.",
  "눈으로 본 정보는 먼저 뇌로 가서 판단돼요. 판단이 끝난 뒤에야 손이 움직여요."
 ];
 var ins=[].slice.call(document.querySelectorAll('#digits input')),msg=document.getElementById('msg'),wrong=0;
