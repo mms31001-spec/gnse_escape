@@ -276,7 +276,7 @@ function boom(){
     if(++t<260)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)})();
 }
 $('mk').onclick=function(){
-  var n=($('nm').value||'').trim()||'용감한 어린이';
+  var n=($('nm').value||'').trim();if(!n){askName();return;}
   var c=$('cv'),x=c.getContext('2d'),W=c.width,H=c.height;
   x.fillStyle='#fff7e3';x.fillRect(0,0,W,H);
   x.strokeStyle='#1593ad';x.lineWidth=18;x.strokeRect(24,24,W-48,H-48);
@@ -309,6 +309,17 @@ function saveCert(){
   }
 }
 $('dl').onclick=saveCert;
+</script>
+<div id="askname" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:20px">
+ <div style="background:#fff8e1;border:5px solid #ffc928;border-radius:18px;padding:22px 20px 16px;width:min(300px,86vw);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.35)">
+  <div style="font-size:30px;line-height:1">✏️</div>
+  <div style="font-size:19px;font-weight:900;color:#0d3b57;margin:10px 0 16px">이름을 입력해 주세요!</div>
+  <button id="asknameok" type="button" style="border:0;background:#ff7a2f;color:#fff;font-weight:900;font-size:17px;padding:11px 0;width:100%;border-radius:14px;cursor:pointer;font-family:inherit">확인</button>
+ </div>
+</div>
+<script>
+function askName(){var a=document.getElementById('askname');a.style.display='flex';document.getElementById('asknameok').focus()}
+document.getElementById('asknameok').onclick=function(){document.getElementById('askname').style.display='none';var i=document.getElementById('nm');i.focus();try{i.scrollIntoView({block:'center'})}catch(e){}};
 </script>
 </body>
 </html>
